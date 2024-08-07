@@ -43,7 +43,7 @@
 
         // Berlin-Grenzen laden und als Polygon darstellen
         function loadBerlinBounds() {
-            loadGeoJSON('data/berlin_boundaries.geojson')
+            loadGeoJSON('data/berlin.geojson')
                 .then(data => {
                     L.geoJSON(data, {
                         style: function (feature) {
