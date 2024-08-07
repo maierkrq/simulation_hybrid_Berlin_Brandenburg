@@ -34,33 +34,34 @@
             attribution: 'Simulation'
         }).addTo(map);
 
-        //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        //    maxZoom: 18,
-        //    attribution: 'Simulation'
-        //}).addTo(map);
-        
+
         // Agenten laden und als Punkte darstellen
-        fetch('data/agents.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Netzwerkantwort war nicht ok.');
-                }
-                return response.json();
-            })
+        fetch('data/agents.json') 
+            .then(response => response.json())
             .then(data => {
-                if (!Array.isArray(data)) {
-                    throw new Error('Daten sind kein Array.');
-                }
+                checkDataLoaded(data, 'Agenten');
                 data.forEach(agent => {
-                    L.circleMarker([agent.y, agent.x], {  // Reihenfolge ändern
-                        radius: 5,  // Beispiel für kleinere Marker
-                        fillColor: '#ff7800',
+                    var color;
+                    switch (agent.status) {
+                        case 'healthy':
+                            color = '#0000ff';  // Blau für gesund
+                            break;
+                        case 'sick':
+                            color = '#ff0000';  // Rot für krank
+                            break;
+                        default:
+                            color = '#00ff00';  // Standardfarbe, wenn Status unbekannt
+                    }
+
+                    L.circleMarker([agent.y, agent.x], {
+                        radius: 10,  // Größerer Radius für bessere Sichtbarkeit
+                        fillColor: color,  // Farbe basierend auf dem Status
                         color: '#000',
                         weight: 1,
                         opacity: 1,
-                        fillOpacity: 0.8
+                        fillOpacity: 1  // Volle Deckkraft
                     }).addTo(map)
-                      .bindPopup(`Agent ID: ${agent.id}`);
+                      .bindPopup(`Agent ID: ${agent.id}, Status: ${agent.status}`);
                 });
             })
             .catch(error => console.error('Fehler beim Laden der Agentendaten:', error));
