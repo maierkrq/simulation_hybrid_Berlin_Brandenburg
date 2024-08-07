@@ -41,23 +41,30 @@
         
         // Agenten laden und als Punkte darstellen
         fetch('data/agents.json')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Netzwerkantwort war nicht ok.');
+                }
+                return response.json();
+            })
             .then(data => {
-                checkDataLoaded(data, 'Agenten');
+                if (!Array.isArray(data)) {
+                    throw new Error('Daten sind kein Array.');
+                }
                 data.forEach(agent => {
-                    L.circleMarker([agent.x, agent.y], {
-                        radius: 50,
+                    L.circleMarker([agent.y, agent.x], {  // Reihenfolge ändern
+                        radius: 10,  // Beispiel für kleinere Marker
                         fillColor: '#ff7800',
                         color: '#000',
                         weight: 1,
                         opacity: 1,
-                        fillOpacity: 1 //0.8
+                        fillOpacity: 0.8
                     }).addTo(map)
                       .bindPopup(`Agent ID: ${agent.id}`);
                 });
             })
             .catch(error => console.error('Fehler beim Laden der Agentendaten:', error));
-
+    
     </script>
 </body>
 </html>
