@@ -62,12 +62,12 @@
                     }
 
                     L.circleMarker([agent.y, agent.x], {
-                        radius: 10,  // Größerer Radius für bessere Sichtbarkeit
+                        radius: 5,  // Größerer Radius für bessere Sichtbarkeit
                         fillColor: color,  // Farbe basierend auf dem Status
                         color: '#000',
                         weight: 1,
                         opacity: 1,
-                        fillOpacity: 1  // Volle Deckkraft
+                        fillOpacity: 0.8
                     }).addTo(map)
                       .bindPopup(`Agent ID: ${agent.id}, Status: ${agent.status}`);
                 });
