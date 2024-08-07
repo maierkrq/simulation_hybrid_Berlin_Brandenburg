@@ -35,13 +35,6 @@
             attribution: 'Simulation'
         }).addTo(map);
 
-        // Funktion zum Laden der GeoJSON-Daten
-        function loadGeoJSON(url) {
-            return fetch(url)
-                .then(response => response.json())
-                .then(data => data);
-        }
-
         // Berlin-Grenzen laden und als Polygon darstellen
         function loadBerlinBounds() {
             return fetch('data/berlin.geojson')
@@ -70,7 +63,9 @@
             fetch('data/density.json')
                 .then(response => response.json())
                 .then(data => {
+                    console.log("Dichte-Daten geladen:", data);
                     var heatPoints = data.map(d => [d.y, d.x, d.density]);
+                    console.log("HeatPoints erstellt:", heatPoints);
                     
                     // Erstelle eine Heatmap-Layer
                     var heatLayer = L.heatLayer(heatPoints, {
@@ -78,9 +73,9 @@
                         blur: 15,
                         maxZoom: 17,
                         gradient: {
-                            0.0: 'rgba(255, 204, 204, 0.8)',  // Helles Rot
-                            0.5: 'rgba(255, 102, 102, 0.8)',  // Mittelhelles Rot
-                            1.0: 'rgba(255, 0, 0, 0.8)'       // Dunkelrot
+                            0.0: 'rgba(255, 204, 204, 0.8)',  
+                            0.5: 'rgba(255, 102, 102, 0.8)', 
+                            1.0: 'rgba(255, 0, 0, 0.8)' 
                         }
                     });
 
@@ -112,7 +107,7 @@
                     });
                 })
                 .catch(error => console.error('Fehler beim Laden der Dichtedaten:', error));
-        });
+        }).catch(error => console.error('Fehler beim Laden der Berlin-Grenzen:', error));
 
         // Überprüfe, ob die Daten erfolgreich geladen wurden
         function checkDataLoaded(data, description) {
