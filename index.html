@@ -40,18 +40,13 @@
             return fetch('data/berlin.geojson')
                 .then(response => response.json())
                 .then(data => {
-                    var berlinPolygon = L.geoJSON(data, {
-                        style: {
-                            color: 'green',
-                            weight: 2,
-                            opacity: 0
-                        }
-                    }).addTo(map);
+                    if (!data.features || data.features.length === 0 || !data.features[0].geometry || !data.features[0].geometry.coordinates) {
+                        throw new Error('Ungültige Berlin-Grenzen Daten.');
+                    }
+        
+                    // Konvertiere die Koordinaten von [lng, lat] nach [lat, lng]
+                    var bounds = data.features[0].geometry.coordinates[0].map(coord => [coord[1], coord[0]]);
 
-                    // Setze die Grenzen des Polygons
-                    var bounds = L.latLngBounds(
-                        data.features[0].geometry.coordinates[0].map(coord => [coord[1], coord[0]])
-                    );
 
                     return bounds;  // Rückgabe der Berlin-Grenzen
                 })
