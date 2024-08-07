@@ -1,5 +1,12 @@
 [
-    {"id": 1, "x": 50.0, "y": 50.0},
-    {"id": 2, "x": 60.0, "y": 60.0},
-    // Weitere Agenten
+    {"id": 1, "x": 13.4050, "y": 52.5200},  // Berlin, Brandenburger Tor
+    {"id": 2, "x": 13.3777, "y": 52.5163},  // Berlin, Reichstag
+    {"id": 3, "x": 13.4543, "y": 52.5086},  // Berlin, East Side Gallery
+    {"id": 4, "x": 13.3261, "y": 52.5074},  // Berlin, Schloss Charlottenburg
+    {"id": 5, "x": 12.3748, "y": 52.4036},  // Potsdam, Sanssouci
+    {"id": 6, "x": 13.0657, "y": 52.5177},  // Brandenburg an der Havel
+    {"id": 7, "x": 13.7373, "y": 51.8666},  // Cottbus
+    {"id": 8, "x": 14.2858, "y": 52.3526},  // Frankfurt (Oder)
+    {"id": 9, "x": 13.1955, "y": 52.9584},  // Neuruppin
+    {"id": 10, "x": 14.5310, "y": 52.1326}  // Eisenhüttenstadt
 ]
