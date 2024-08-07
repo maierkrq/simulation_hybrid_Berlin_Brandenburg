@@ -19,10 +19,10 @@
 <body>
     <div id="map"></div>
     <div class="legend">
-        <h4>Legende</h4>
-        <p>Punkte: Agenten</p>
-        <p>Linien: Gitter</p>
-        <p>Fläche: Dichte</p>
+        <h4>Legend</h4>
+        <p>blue dots: susceptible agents</p>
+        <p>red  dots: infected agents</p>
+        <p>red  area: infected density</p>
     </div>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
@@ -59,8 +59,8 @@
                     var coordinates = data.features[0].geometry.coordinates[0];
                     var bounds = L.latLngBounds(coordinates.map(coord => [coord[1], coord[0]]));
                     
-                    // Karte auf Berlin fokussieren und anpassen
-                    map.fitBounds(bounds);
+                    //// Karte auf Berlin fokussieren und anpassen
+                    //map.fitBounds(bounds);
                 })
                 .catch(error => console.error('Fehler beim Laden der Berlin-Grenzen:', error));
         }
