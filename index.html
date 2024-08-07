@@ -44,29 +44,73 @@
 
         // Berlin-Grenzen laden und als Polygon darstellen
         function loadBerlinBounds() {
-            loadGeoJSON('data/berlin.geojson')
+            fetch('data/berlin.geojson')
+                .then(response => response.json())
                 .then(data => {
-                    L.geoJSON(data, {
-                        style: function (feature) {
-                            return {
-                                color: 'green',
-                                weight: 2,
-                                opacity: 0.5
-                            };
+                    var berlinPolygon = L.geoJSON(data, {
+                        style: {
+                            color: 'green',
+                            weight: 2,
+                            opacity: 0.5
                         }
                     }).addTo(map);
 
-                    // Koordinaten des Polygons extrahieren
-                    var coordinates = data.features[0].geometry.coordinates[0];
-                    var bounds = L.latLngBounds(coordinates.map(coord => [coord[1], coord[0]]));
-                    
-                    //// Karte auf Berlin fokussieren und anpassen
-                    //map.fitBounds(bounds);
+                    // Setze die Grenzen des Polygons
+                    var bounds = L.latLngBounds(
+                        data.features[0].geometry.coordinates[0].map(coord => [coord[1], coord[0]])
+                    );
+
+                    // Map auf Berlin zentrieren
+                    map.fitBounds(bounds);
+
+                    return bounds;  // Rückgabe der Berlin-Grenzen
                 })
                 .catch(error => console.error('Fehler beim Laden der Berlin-Grenzen:', error));
         }
 
-        loadBerlinBounds();
+        loadBerlinBounds().then(berlinBounds => {
+            // Dichte-Daten laden und als Heatmap darstellen
+            fetch('data/density.json')
+                .then(response => response.json())
+                .then(data => {
+                    var heatPoints = data.map(d => [d.y, d.x, d.density]);
+                    
+                    // Erstelle eine Heatmap-Layer
+                    var heatLayer = L.heatLayer(heatPoints, {
+                        radius: 25,
+                        blur: 15,
+                        maxZoom: 17
+                    });
+
+                    // Füge die Heatmap zum Map hinzu
+                    heatLayer.addTo(map);
+
+                    // Füge eine Maske hinzu, die nur innerhalb der Berlin-Grenzen angezeigt wird
+                    var mask = L.geoJSON({
+                        "type": "FeatureCollection",
+                        "features": [{
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Polygon",
+                                "coordinates": [data.features[0].geometry.coordinates[0]]
+                            }
+                        }]
+                    }, {
+                        style: function () {
+                            return {
+                                weight: 0,
+                                fillOpacity: 0
+                            };
+                        }
+                    }).addTo(map);
+
+                    // Maske aktivieren, um die Heatmap nur innerhalb der Grenzen von Berlin sichtbar zu machen
+                    map.on('overlayadd', function() {
+                        heatLayer.setBounds(berlinBounds);
+                    });
+                })
+                .catch(error => console.error('Fehler beim Laden der Dichtedaten:', error));
+        });
 
         // Überprüfe, ob die Daten erfolgreich geladen wurden
         function checkDataLoaded(data, description) {
@@ -107,16 +151,6 @@
                 });
             })
             .catch(error => console.error('Fehler beim Laden der Agentendaten:', error));
-
-        // Beispiel für das Laden der Dichte-Daten
-        fetch('data/density.json')
-            .then(response => response.json())
-            .then(data => {
-                var heatPoints = data.map(d => [d.y, d.x, d.density]);
-                L.heatLayer(heatPoints, {radius: 25, blur: 15}).addTo(map);
-            })
-            .catch(error => console.error('Fehler beim Laden der Dichtedaten:', error));
-
     </script>
 </body>
 </html>
