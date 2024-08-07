@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 80vh;
+            width: 100%;
+        }
+        .legend {
+            background: white;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="legend">
+        <h4>Legende</h4>
+        <p>Erklärung der Simulationselemente</p>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Beispiel: Daten laden
+        fetch('data/agents.json')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // Daten verarbeiten und auf der Karte darstellen
+            });
+
+        var map = L.map('map').setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Simulation'
+        }).addTo(map);
+    </script>
+</body>
+</html>
