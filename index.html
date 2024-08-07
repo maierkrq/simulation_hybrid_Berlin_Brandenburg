@@ -34,6 +34,14 @@
             attribution: 'Simulation'
         }).addTo(map);
 
+        // Überprüfe, ob die Daten erfolgreich geladen wurden
+        function checkDataLoaded(data, description) {
+            if (!data || data.length === 0) {
+                console.error(description + ' Daten wurden nicht geladen oder sind leer.');
+            } else {
+                console.log(description + ' Daten erfolgreich geladen.');
+            }
+        }
 
         // Agenten laden und als Punkte darstellen
         fetch('data/agents.json') 
