@@ -25,6 +25,7 @@
         <p>red  area: infected density</p>
     </div>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
     <script>
         var map = L.map('map').setView([52.5, 13.5], 8);
         
@@ -106,7 +107,16 @@
                 });
             })
             .catch(error => console.error('Fehler beim Laden der Agentendaten:', error));
-    
+
+        // Beispiel für das Laden der Dichte-Daten
+        fetch('data/density.json')
+            .then(response => response.json())
+            .then(data => {
+                var heatPoints = data.map(d => [d.y, d.x, d.density]);
+                L.heatLayer(heatPoints, {radius: 25, blur: 15}).addTo(map);
+            })
+            .catch(error => console.error('Fehler beim Laden der Dichtedaten:', error));
+
     </script>
 </body>
 </html>
