@@ -45,7 +45,7 @@
             .then(data => {
                 checkDataLoaded(data, 'Agenten');
                 data.forEach(agent => {
-                    L.circleMarker([agent.y, agent.x], {
+                    L.circleMarker([agent.x, agent.y], {
                         radius: 50,
                         fillColor: '#ff7800',
                         color: '#000',
