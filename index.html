@@ -228,31 +228,35 @@
         function initializeMap() {
             Promise.all([loadBerlinBounds(), loadGridData(), loadAgentData()])
                 .then(([berlinBounds, gridData, agentsData]) => {
-                    return loadDensityData(gridData).then(canvasLayer => {
-                        // Erstelle eine Maske für die Heatmap
-                        var mask = L.geoJSON({
-                            "type": "FeatureCollection",
-                            "features": [{
-                                "type": "Feature",
-                                "geometry": {
-                                    "type": "Polygon",
-                                    "coordinates": [berlinBounds]
+                    return loadDensityData(gridData).then(heatLayer => {
+                        if (heatLayer) {
+                            // Erstelle eine Maske für die Heatmap
+                            var mask = L.geoJSON({
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "Polygon",
+                                        "coordinates": [berlinBounds]
+                                    }
+                                }]
+                            }, {
+                                style: function () {
+                                    return {
+                                        weight: 0,
+                                        fillOpacity: 0
+                                    };
                                 }
-                            }]
-                        }, {
-                            style: function () {
-                                return {
-                                    weight: 0,
-                                    fillOpacity: 0
-                                };
-                            }
-                        }).addTo(map);
-        
-                        canvasLayer.addTo(mask);
-                        console.log("Canvas Layer hinzugefügt");
-        
-                        // Starte die Animation
-                        animate();
+                            }).addTo(map);
+            
+                            L.layerGroup([mask, L.imageOverlay(heatLayer, map.getBounds())]).addTo(map);
+                            console.log("HeatLayer hinzugefügt");
+            
+                            // Starte die Animation
+                            animate();
+                        } else {
+                            throw new Error("HeatLayer konnte nicht erstellt werden.");
+                        }
                     });
                 })
                 .catch(error => console.error('Fehler beim Initialisieren der Karte:', error));
