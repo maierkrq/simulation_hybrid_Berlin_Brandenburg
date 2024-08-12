@@ -29,7 +29,8 @@
     </div>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     //<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://unpkg.com/d3-delaunay@6/d3-delaunay.min.js"></script>
     <script>
         // Globale Variablen für die Agentenmarker und Iterationssteuerung
         var agentMarkers = [];
@@ -86,32 +87,49 @@
                     console.log("Dichte-Daten geladen:", data);
                     console.log("Grid-Daten erfolgreich übergeben:", gridData);
                     
-                    // Verknüpfe IDs aus density.json mit Koordinaten aus gridData
-                    var densityData = data.map(d => {
-                        var coords = gridData.find(grid => grid.id === d.id);
-                        return coords ? {lat: coords.latitude, lng: coords.longitude, value: d.density} : null;
-                    }).filter(point => point !== null);
-        
-                    console.log("Density Data erstellt:", densityData);
+                    var points = gridData.map(d => [d.longitude, d.latitude, d.value]);
+                    
+                    var delaunay = d3.Delaunay.from(points);
+                    var triangles = delaunay.triangles;
 
-                    // Interpolation und Erstellung einer Heatmap auf einem Canvas Layer
-                    var canvasLayer = L.canvasLayer({padding: 0.5}).delegate({
-                        onDrawLayer: function(info) {
-                            var ctx = info.canvas.getContext('2d');
-                            ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
+                    var svg = d3.select(map.getPanes().overlayPane).append("svg");
+                    var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
-                            densityData.forEach(d => {
-                                var point = info.layer._map.latLngToContainerPoint([d.lat, d.lng]);
-                                var color = d3.interpolateViridis(d.value);
-                                ctx.fillStyle = color;
-                                ctx.beginPath();
-                                ctx.arc(point.x, point.y, 20, 0, Math.PI * 2, true);
-                                ctx.fill();
-                            });
-                        }
-                    }).addTo(map);
+                    function update() {
+                        var bounds = map.getBounds();
+                        var topLeft = map.latLngToLayerPoint(bounds.getNorthWest());
+                        var bottomRight = map.latLngToLayerPoint(bounds.getSouthEast());
 
-                    return canvasLayer;
+                        svg.attr("width", bottomRight.x - topLeft.x)
+                           .attr("height", bottomRight.y - topLeft.y)
+                           .style("left", topLeft.x + "px")
+                           .style("top", topLeft.y + "px");
+
+                        g.attr("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
+
+                        var path = d3.geoPath()
+                                     .projection(d3.geoTransform({point: projectPoint}));
+
+                        g.selectAll("path")
+                            .data(triangles)
+                            .join("path")
+                            .attr("d", function(d) {
+                                return "M" + d[0] + "," + d[1] + "L" + d[2] + "," + d[3] + "L" + d[4] + "," + d[5] + "Z";
+                            })
+                            .attr("fill", function(d) {
+                                var densityValue = (points[d[0]][2] + points[d[2]][2] + points[d[4]][2]) / 3;
+                                return d3.interpolateReds(densityValue);
+                            })
+                            .attr("stroke", "#999");
+                    }
+
+                    function projectPoint(x, y) {
+                        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+                        this.stream.point(point.x, point.y);
+                    }
+
+                    map.on("zoomend", update);
+                    update();
                 })
                 .catch(error => console.error('Fehler beim Laden der Dichtedaten:', error));
         }
