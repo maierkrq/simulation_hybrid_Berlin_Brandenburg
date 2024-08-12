@@ -87,7 +87,7 @@
                     // Verknüpfe IDs aus density.json mit Koordinaten aus gridData
                     var heatPoints = data.map(d => {
                         var coords = gridData.find(grid => grid.id === d.id);
-                        return coords ? [coords.lat, coords.lng, d.density] : null;
+                        return coords ? [coords.latitude, coords.longitude, d.density] : null;
                     }).filter(point => point !== null);
         
                     console.log("HeatPoints erstellt:", heatPoints);
