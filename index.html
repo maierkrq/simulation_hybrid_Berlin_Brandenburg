@@ -149,10 +149,15 @@
                 agentMarkers.push(marker);
             });
         }
+
+        function updateIterationDisplay(iteration) {
+            document.getElementById('iteration-counter').textContent = iteration;
+        }
         
         // Animation der Agenten
         function animate() {
             updateAgents(iteration);
+            updateIterationDisplay(iteration);  // Iteration in der Legende anzeigen
             iteration++;
             if (iteration < maxIterations) {
                 setTimeout(animate, 1000);  // Nächste Iteration nach 1 Sekunde anzeigen
@@ -161,6 +166,10 @@
                 setTimeout(animate, 1000);  // Schleife von vorne starten
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            animate();  // Animation starten, nachdem die Seite geladen wurde
+        });
     </script>
 </body>
 </html>
