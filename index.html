@@ -132,7 +132,7 @@
 
                     console.log("before g.selectAll");
                     g.selectAll("path")
-                        .data(triangles)
+                        .data(d3.pairs(triangles))
                         .join("path")
                         .attr("d", function(d) {
                             var p0 = points[d[0]],
