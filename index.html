@@ -128,6 +128,12 @@
 
                     g.attr("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
 
+                    console.log("width", bottomRight.x - topLeft.x);
+                    console.log("height", bottomRight.y - topLeft.y);
+                    console.log("left", topLeft.x + "px");
+                    console.log("top", topLeft.y + "px");
+                    console.log("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
+
                     var path = d3.geoPath()
                                  .projection(d3.geoTransform({point: projectPoint}));
 
@@ -164,7 +170,6 @@
                             return d3.interpolateReds(densityValue);
                         })
                         .attr("stroke", "#999");
-                    console.log("after g.selectAll");
 
                     return svg.node();
                 })
