@@ -82,6 +82,8 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log("Dichte-Daten geladen:", data);
+
+                    console.log("Grid-Daten erfolgreich uebergeben:", gridData);
                     // Verknüpfe IDs aus density.json mit Koordinaten aus gridData
                     var heatPoints = data.map(d => {
                         var coords = gridData.find(grid => grid.id === d.id);
