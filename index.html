@@ -108,9 +108,14 @@
                     var svg = d3.select(map.getPanes().overlayPane).append("svg");
                     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
-                    console.log("before update");
-
+                    function projectPoint(x, y) {
+                        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+                        this.stream.point(point.x, point.y);
+                    }
+                    
                     function update() {
+                        console.log("inside update");
+                        
                         var bounds = map.getBounds();
                         var topLeft = map.latLngToLayerPoint(bounds.getNorthWest());
                         var bottomRight = map.latLngToLayerPoint(bounds.getSouthEast());
@@ -125,6 +130,7 @@
                         var path = d3.geoPath()
                                      .projection(d3.geoTransform({point: projectPoint}));
 
+                        console.log("before g.selectAll");
                         g.selectAll("path")
                             .data(triangles)
                             .join("path")
@@ -136,14 +142,11 @@
                                 return d3.interpolateReds(densityValue);
                             })
                             .attr("stroke", "#999");
-                    }
-
-                    function projectPoint(x, y) {
-                        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-                        this.stream.point(point.x, point.y);
+                        console.log("after g.selectAll");
                     }
 
                     map.on("zoomend", update);
+                    console.log("before update");
                     update();
                 })
                 .catch(error => console.error('Fehler beim Laden der Dichtedaten:', error));
