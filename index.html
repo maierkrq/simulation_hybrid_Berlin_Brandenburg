@@ -49,7 +49,8 @@
         var maxIterations;
         var agentsData;
                 
-        var map = L.map('map').setView([52.5, 13.5], 8);
+        //var map = L.map('map').setView([52.5, 13.5], 8);
+        var map = L.map('map').setView([51.505, -0.09], 13);
         
         // Schwarz-Weiß-Kachel hinzufügen
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -267,10 +268,17 @@
                 .catch(error => console.error('Fehler beim Initialisieren der Karte:', error));
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-             // Initialisiere die Karte
-            initializeMap();
-        });
+        //document.addEventListener('DOMContentLoaded', function() {
+        //     // Initialisiere die Karte
+        //    initializeMap();
+        //});
+        
+        // Bild-URL für das Overlay
+        var imageUrl = 'https://www.w3schools.com/w3images/lights.jpg';
+        var imageBounds = [[51.49, -0.08], [51.5, -0.06]]; // Koordinaten für die Ecken des Bildes
+
+        // Bild-Overlay hinzufügen
+        L.imageOverlay(imageUrl, imageBounds).addTo(map);
         
     </script>
 </body>
