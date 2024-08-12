@@ -49,8 +49,7 @@
         var maxIterations;
         var agentsData;
                 
-        //var map = L.map('map').setView([52.5, 13.5], 8);
-        var map = L.map('map').setView([51.505, -0.09], 13);
+        var map = L.map('map').setView([52.5, 13.5], 8);
         
         // Schwarz-Weiß-Kachel hinzufügen
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -256,7 +255,7 @@
         
                             // Verwenden Sie imageOverlay, um das SVG als Layer hinzuzufügen
                             console.log("bounds:", map.getBounds());
-                            L.imageOverlay(svgUrl, map.getBounds()).addTo(map);
+                            L.imageOverlay(svgUrl, [[51.15, 12.60], [53.55, 15.03]]).addTo(map);
                             console.log("HeatLayer hinzugefügt");
                     
                             // Starte die Animation
@@ -271,33 +270,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
              // Initialisiere die Karte
-            //initializeMap();
-             // SVG Element erstellen
-            var svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svgElement.setAttribute('width', '200');
-            svgElement.setAttribute('height', '200');
-    
-            var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            rect.setAttribute('x', '10');
-            rect.setAttribute('y', '10');
-            rect.setAttribute('width', '100');
-            rect.setAttribute('height', '100');
-            rect.setAttribute('fill', 'blue');
-            svgElement.appendChild(rect);
-    
-            var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.setAttribute('cx', '60');
-            circle.setAttribute('cy', '60');
-            circle.setAttribute('r', '50');
-            circle.setAttribute('fill', 'red');
-            svgElement.appendChild(circle);
-    
-            // SVG in String umwandeln und Base64 kodieren
-            var svgData = new XMLSerializer().serializeToString(svgElement);
-            var svgUrl = 'data:image/svg+xml;base64,' + btoa(svgData);
-    
-            // SVG als Overlay hinzufügen
-            L.imageOverlay(svgUrl, [[51.49, -0.08], [51.51, -0.06]]).addTo(map);
+            initializeMap();
         });
         
         
