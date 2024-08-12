@@ -87,13 +87,28 @@
                     console.log("Dichte-Daten geladen:", data);
                     console.log("Grid-Daten erfolgreich übergeben:", gridData);
                     
-                    var points = gridData.map(d => [d.longitude, d.latitude, d.value]);
+                    var points = data.map(d => {
+                        var coords = gridData.find(grid => grid.id === d.id);
+                        if (!coords || !coords.latitude || !coords.longitude) {
+                            console.error(`Koordinaten für ID ${d.id} nicht gefunden.`);
+                            return null;
+                        }
+                        return [coords.longitude, coords.latitude, d.density];
+                    }).filter(point => point !== null);
+        
+                    if (points.length === 0) {
+                        throw new Error("Keine gültigen Punkte für die Interpolation gefunden.");
+                    }
+
+                    console.log("Interpolationspunkte:", points);
                     
-                    var delaunay = d3.Delaunay.from(points);
+                    var delaunay = d3.Delaunay.from(points, d => d[0], d => d[1]);
                     var triangles = delaunay.triangles;
 
                     var svg = d3.select(map.getPanes().overlayPane).append("svg");
                     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+                    console.log("before update");
 
                     function update() {
                         var bounds = map.getBounds();
