@@ -132,12 +132,13 @@
 
                     console.log("before g.selectAll");
                     g.selectAll("path")
-                        .data(d3.pairs(triangles))
+                        .data(d3.range(triangles.length / 3)) // Anzahl der Dreiecke
                         .join("path")
                         .attr("d", function(d) {
-                            var p0 = points[d[0]],
-                                p1 = points[d[1]],
-                                p2 = points[d[2]];
+                            var i = d * 3; // Index für das aktuelle Dreieck
+                            var p0 = points[triangles[i]],
+                                p1 = points[triangles[i + 1]],
+                                p2 = points[triangles[i + 2]];
                     
                             if (!p0 || !p1 || !p2) {
                                 console.error("Ungültige Daten für das Dreieck:", d, ", Punkte:", p0, p1, p2);
@@ -148,9 +149,10 @@
                             return "M" + p0[0] + "," + p0[1] + "L" + p1[0] + "," + p1[1] + "L" + p2[0] + "," + p2[1] + "Z";
                         })
                         .attr("fill", function(d) {
-                            var p0 = points[d[0]],
-                                p1 = points[d[1]],
-                                p2 = points[d[2]];
+                            var i = d * 3; // Index für das aktuelle Dreieck
+                            var p0 = points[triangles[i]],
+                                p1 = points[triangles[i + 1]],
+                                p2 = points[triangles[i + 2]];
                     
                             if (!p0 || !p1 || !p2) {
                                 console.error("Ungültige Daten für das Dreieck:", d);
