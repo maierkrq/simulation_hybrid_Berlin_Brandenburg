@@ -20,9 +20,11 @@
     <div id="map"></div>
     <div class="legend">
         <h4>Legend</h4>
-        <p>blue dots: susceptible agents</p>
-        <p>red  dots: infected agents</p>
+        <p>green dots: susceptible agents</p>
+        <p>red   dots: infected agents</p>
+        <p>blue  dots: recovered agents</p>
         <p>red  area: infected density</p>
+        <p>Iteration: <span id="iteration-counter">0</span></p> <!-- Iteration-Anzeige -->
     </div>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
@@ -152,6 +154,9 @@
             iteration++;
             if (iteration < maxIterations) {
                 setTimeout(animate, 1000);  // Nächste Iteration nach 1 Sekunde anzeigen
+            } else {
+                iteration = 0;  // Zurück zur ersten Iteration
+                setTimeout(animate, 1000);  // Schleife von vorne starten
             }
         }
     </script>
