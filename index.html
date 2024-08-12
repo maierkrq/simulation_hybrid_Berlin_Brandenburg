@@ -101,47 +101,53 @@
                     console.log("heatLayer hinzugefuegt");
                 })
                 .catch(error => console.error('Fehler beim Laden der Dichtedaten:', error));
-        }).catch(error => console.error('Fehler beim Laden der Berlin-Grenzen:', error));
 
-        // Überprüfe, ob die Daten erfolgreich geladen wurden
-        function checkDataLoaded(data, description) {
-            if (!data || data.length === 0) {
-                console.error(description + ' Daten wurden nicht geladen oder sind leer.');
-            } else {
-                console.log(description + ' Daten erfolgreich geladen.');
+            // Agenten-Daten laden und Animation starten
+            fetch('data/agents.json')
+                .then(response => response.json())
+                .then(data => {
+                    agentsData = data.iterations;
+                    maxIterations = agentsData.length;
+                    animate();  // Starte die Animation
+                })
+                .catch(error => console.error('Fehler beim Laden der Agentendaten:', error));
+
+            
+        }).catch(error => console.error('Fehler beim Laden der Berlin-Grenzen oder Agentendaten:', error));
+
+        // Agenten für die aktuelle Iteration aktualisieren
+        function updateAgents(iteration) {
+            agentMarkers.forEach(marker => map.removeLayer(marker));
+            agentMarkers = [];
+        
+            var currentIteration = agentsData[iteration];
+            currentIteration.agents.forEach(agent => {
+                var color = agent.status === 'infected' ? '#ff0000' : 
+                            agent.status === 'recovered' ? '#0000ff' : 
+                            '#00ff00';
+        
+                var marker = L.circleMarker([agent.y, agent.x], {
+                    radius: 5,
+                    fillColor: color,
+                    color: '#000',
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(map)
+                  .bindPopup(`Agent ID: ${agent.id}, Status: ${agent.status}`);
+        
+                agentMarkers.push(marker);
+            });
+        }
+        
+        // Animation der Agenten
+        function animate() {
+            updateAgents(iteration);
+            iteration++;
+            if (iteration < maxIterations) {
+                setTimeout(animate, 1000);  // Nächste Iteration nach 1 Sekunde anzeigen
             }
         }
-
-        // Agenten laden und als Punkte darstellen
-        fetch('data/agents.json') 
-            .then(response => response.json())
-            .then(data => {
-                checkDataLoaded(data, 'Agenten');
-                data.forEach(agent => {
-                    var color;
-                    switch (agent.status) {
-                        case 'healthy':
-                            color = '#0000ff';  // Blau für gesund
-                            break;
-                        case 'sick':
-                            color = '#ff0000';  // Rot für krank
-                            break;
-                        default:
-                            color = '#00ff00';  // Standardfarbe, wenn Status unbekannt
-                    }
-
-                    L.circleMarker([agent.y, agent.x], {
-                        radius: 5,  // Größerer Radius für bessere Sichtbarkeit
-                        fillColor: color,  // Farbe basierend auf dem Status
-                        color: '#000',
-                        weight: 1,
-                        opacity: 1,
-                        fillOpacity: 0.8
-                    }).addTo(map)
-                      .bindPopup(`Agent ID: ${agent.id}, Status: ${agent.status}`);
-                });
-            })
-            .catch(error => console.error('Fehler beim Laden der Agentendaten:', error));
     </script>
 </body>
 </html>
