@@ -230,30 +230,15 @@
         function initializeMap() {
             Promise.all([loadBerlinBounds(), loadGridData(), loadAgentData()])
                 .then(([berlinBounds, gridData, agentsData]) => {
-                    return loadDensityData(gridData).then(heatLayer => {
-                        if (heatLayer) {
-                            // Erstelle eine Maske für die Heatmap
-                            var mask = L.geoJSON({
-                                "type": "FeatureCollection",
-                                "features": [{
-                                    "type": "Feature",
-                                    "geometry": {
-                                        "type": "Polygon",
-                                        "coordinates": [berlinBounds]
-                                    }
-                                }]
-                            }, {
-                                style: function () {
-                                    return {
-                                        weight: 0,
-                                        fillOpacity: 0
-                                    };
-                                }
-                            }).addTo(map);
-            
-                            L.layerGroup([mask, L.imageOverlay(heatLayer, map.getBounds())]).addTo(map);
-                            console.log("HeatLayer hinzugefügt");
-            
+                    return loadDensityData(gridData).then(svgElement => {
+                        if (svgElement) {
+                            var svgData = new XMLSerializer().serializeToString(svgElement);
+                            var svgUrl = 'data:image/svg+xml;base64,' + btoa(svgData);
+        
+                            // Verwenden Sie imageOverlay, um das SVG als Layer hinzuzufügen
+                            L.imageOverlay(svgUrl, map.getBounds()).addTo(map);
+                                    console.log("HeatLayer hinzugefügt");
+                    
                             // Starte die Animation
                             animate();
                         } else {
