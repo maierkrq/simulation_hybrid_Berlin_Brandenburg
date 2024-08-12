@@ -28,7 +28,8 @@
         <p>Iteration: <span id="iteration-counter">0</span></p> <!-- Iteration-Anzeige -->
     </div>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    //<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
         // Globale Variablen für die Agentenmarker und Iterationssteuerung
         var agentMarkers = [];
@@ -76,37 +77,82 @@
                 .catch(error => console.error('Fehler beim Laden der Grid-Daten:', error));
         }
 
-        // Dichte-Daten laden und Heatmap erstellen
+         
+        var agentMarkers = [];
+        var iteration = 0;
+        var maxIterations;
+        var agentsData;
+                
+        var map = L.map('map').setView([52.5, 13.5], 8);
+        
+        // Schwarz-Weiß-Kachel hinzufügen
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 18,
+            attribution: 'Simulation'
+        }).addTo(map);
+
+        // Berlin-Grenzen laden und als Polygon darstellen
+        function loadBerlinBounds() {
+            return fetch('data/berlin.geojson')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.features || data.features.length === 0 || !data.features[0].geometry || !data.features[0].geometry.coordinates) {
+                        throw new Error('Ungültige Berlin-Grenzen Daten.');
+                    }
+                    var bounds = data.features[0].geometry.coordinates[0].map(coord => [coord[1], coord[0]]);
+                    return bounds;
+                })
+                .catch(error => console.error('Fehler beim Laden der Berlin-Grenzen:', error));
+        }
+
+        // Koordinaten der Grid-Punkte laden
+        function loadGridData() {
+            return fetch('data/grid.json')
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Grid-Daten geladen:", data);
+                    if (!Array.isArray(data)) {
+                        throw new Error('Ungültige Grid-Daten.');
+                    }
+                    return data;
+                })
+                .catch(error => console.error('Fehler beim Laden der Grid-Daten:', error));
+        }
+
+        // Dichte-Daten laden und interpolierte Heatmap erstellen
         function loadDensityData(gridData) {
             return fetch('data/density.json')
                 .then(response => response.json())
                 .then(data => {
                     console.log("Dichte-Daten geladen:", data);
-
-                    console.log("Grid-Daten erfolgreich uebergeben:", gridData);
+                    console.log("Grid-Daten erfolgreich übergeben:", gridData);
+                    
                     // Verknüpfe IDs aus density.json mit Koordinaten aus gridData
-                    var heatPoints = data.map(d => {
+                    var densityData = data.map(d => {
                         var coords = gridData.find(grid => grid.id === d.id);
-                        return coords ? [coords.latitude, coords.longitude, d.density] : null;
+                        return coords ? {lat: coords.latitude, lng: coords.longitude, value: d.density} : null;
                     }).filter(point => point !== null);
         
-                    console.log("HeatPoints erstellt:", heatPoints);
-        
-                    // Erstelle eine Heatmap-Layer
-                    var heatLayer = L.heatLayer(heatPoints, {
-                        radius: 25,
-                        blur: 2,
-                        max: 1.0,
-                        maxZoom: 17,
-                        gradient: {
-                            0.0: 'rgba(255, 0, 0, 0.2)',
-                            0.5: 'rgba(255, 0, 0, 0.5)',
-                            1.0: 'rgba(255, 0, 0, 1.0)'
+                    console.log("Density Data erstellt:", densityData);
+
+                    // Interpolation und Erstellung einer Heatmap auf einem Canvas Layer
+                    var canvasLayer = L.canvasLayer({padding: 0.5}).delegate({
+                        onDrawLayer: function(info) {
+                            var ctx = info.canvas.getContext('2d');
+                            ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
+
+                            densityData.forEach(d => {
+                                var point = info.layer._map.latLngToContainerPoint([d.lat, d.lng]);
+                                var color = d3.interpolateViridis(d.value);
+                                ctx.fillStyle = color;
+                                ctx.beginPath();
+                                ctx.arc(point.x, point.y, 20, 0, Math.PI * 2, true);
+                                ctx.fill();
+                            });
                         }
-                    });
-                    console.log("heatLayer erstellt");
-        
-                    return heatLayer;
+                    }).addTo(map);
+
+                    return canvasLayer;
                 })
                 .catch(error => console.error('Fehler beim Laden der Dichtedaten:', error));
         }
@@ -170,7 +216,7 @@
         function initializeMap() {
             Promise.all([loadBerlinBounds(), loadGridData(), loadAgentData()])
                 .then(([berlinBounds, gridData, agentsData]) => {
-                    return loadDensityData(gridData).then(heatLayer => {
+                    return loadDensityData(gridData).then(canvasLayer => {
                         // Erstelle eine Maske für die Heatmap
                         var mask = L.geoJSON({
                             "type": "FeatureCollection",
@@ -190,8 +236,8 @@
                             }
                         }).addTo(map);
         
-                        heatLayer.addTo(mask);
-                        console.log("HeatLayer hinzugefügt");
+                        canvasLayer.addTo(mask);
+                        console.log("Canvas Layer hinzugefügt");
         
                         // Starte die Animation
                         animate();
