@@ -167,10 +167,12 @@
                     
                             // Calculate the average density
                             var densityValue = (p0[2] + p1[2] + p2[2]) / 3;
+                            console.log("color:", d3.interpolateReds(densityValue));
                             return d3.interpolateReds(densityValue);
                         })
                         .attr("stroke", "#999");
 
+                    console.log(svg.node().outerHTML);
                     return svg.node();
                 })
                 .catch(error => console.error('Fehler beim Laden der Dichtedaten:', error));
