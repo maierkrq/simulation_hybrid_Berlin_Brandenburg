@@ -106,7 +106,8 @@
                     var triangles = delaunay.triangles;
                     console.log("triangles:", triangles);
 
-                    var svg = d3.select(map.getPanes().overlayPane).append("svg");
+                    var svg = d3.select(map.getPanes().overlayPane).append("svg")
+                                .style("border", "1px solid red");  // Sichtbare Umrandung hinzufügen
                     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
                     function projectPoint(x, y) {
@@ -130,7 +131,6 @@
                     var path = d3.geoPath()
                                  .projection(d3.geoTransform({point: projectPoint}));
 
-                    console.log("before g.selectAll");
                     g.selectAll("path")
                         .data(d3.range(triangles.length / 3)) // Anzahl der Dreiecke
                         .join("path")
@@ -240,7 +240,7 @@
                                     console.log("HeatLayer hinzugefügt");
                     
                             // Starte die Animation
-                            animate();
+                            //animate();
                         } else {
                             throw new Error("HeatLayer konnte nicht erstellt werden.");
                         }
