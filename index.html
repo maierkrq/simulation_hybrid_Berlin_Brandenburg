@@ -77,47 +77,6 @@
                 .catch(error => console.error('Fehler beim Laden der Grid-Daten:', error));
         }
 
-         
-        var agentMarkers = [];
-        var iteration = 0;
-        var maxIterations;
-        var agentsData;
-                
-        var map = L.map('map').setView([52.5, 13.5], 8);
-        
-        // Schwarz-Weiß-Kachel hinzufügen
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            maxZoom: 18,
-            attribution: 'Simulation'
-        }).addTo(map);
-
-        // Berlin-Grenzen laden und als Polygon darstellen
-        function loadBerlinBounds() {
-            return fetch('data/berlin.geojson')
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.features || data.features.length === 0 || !data.features[0].geometry || !data.features[0].geometry.coordinates) {
-                        throw new Error('Ungültige Berlin-Grenzen Daten.');
-                    }
-                    var bounds = data.features[0].geometry.coordinates[0].map(coord => [coord[1], coord[0]]);
-                    return bounds;
-                })
-                .catch(error => console.error('Fehler beim Laden der Berlin-Grenzen:', error));
-        }
-
-        // Koordinaten der Grid-Punkte laden
-        function loadGridData() {
-            return fetch('data/grid.json')
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Grid-Daten geladen:", data);
-                    if (!Array.isArray(data)) {
-                        throw new Error('Ungültige Grid-Daten.');
-                    }
-                    return data;
-                })
-                .catch(error => console.error('Fehler beim Laden der Grid-Daten:', error));
-        }
 
         // Dichte-Daten laden und interpolierte Heatmap erstellen
         function loadDensityData(gridData) {
@@ -250,8 +209,6 @@
              // Initialisiere die Karte
             initializeMap();
         });
-
-       
         
     </script>
 </body>
