@@ -67,6 +67,7 @@
             return fetch('data/grid.json')
                 .then(response => response.json())
                 .then(data => {
+                    console.log("Grid-Daten geladen:", data);
                     if (!Array.isArray(data)) {
                         throw new Error('Ungültige Grid-Daten.');
                     }
