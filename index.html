@@ -23,6 +23,7 @@
         <p>green dots: susceptible agents</p>
         <p>red   dots: infected agents</p>
         <p>blue  dots: recovered agents</p>
+        <p>lilac dots: agents with unknown health status</p>
         <p>red  area: infected density</p>
         <p>Iteration: <span id="iteration-counter">0</span></p> <!-- Iteration-Anzeige -->
     </div>
@@ -130,9 +131,10 @@
         
             var currentIteration = agentsData[iteration];
             currentIteration.agents.forEach(agent => {
-                var color = agent.status === 'infected' ? '#ff0000' : 
+                var color = agent.status === 'healthy' ? '#00ff00' : 
+                            agent.status === 'infected' ? '#ff0000' : 
                             agent.status === 'recovered' ? '#0000ff' : 
-                            '#00ff00';
+                            '#800080';
         
                 var marker = L.circleMarker([agent.y, agent.x], {
                     radius: 5,
