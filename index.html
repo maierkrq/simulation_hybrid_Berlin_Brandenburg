@@ -67,10 +67,10 @@
             return fetch('data/grid.json')
                 .then(response => response.json())
                 .then(data => {
-                    if (!data || !Array.isArray(data.grid)) {
+                    if (!Array.isArray(data)) {
                         throw new Error('Ungültige Grid-Daten.');
                     }
-                    return data.grid; // Rückgabe der Koordinaten
+                    return data; // Rückgabe der Koordinaten
                 })
                 .catch(error => console.error('Fehler beim Laden der Grid-Daten:', error));
         }
