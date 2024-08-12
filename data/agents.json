@@ -3,16 +3,16 @@
         {
             "iteration": 1,
             "agents": [
-                {"x": 13.405, "y": 52.52, "status": "healthy"},
-                {"x": 13.408, "y": 52.52, "status": "infected"}
+                {"id": 1, "x": 13.405, "y": 52.52, "status": "healthy"},
+                {"id": 2, "x": 13.408, "y": 52.52, "status": "infected"}
             ]
         },
         {
             "iteration": 2,
             "agents": [
-                {"x": 13.406, "y": 52.521, "status": "infected"},
-                {"x": 13.409, "y": 52.519, "status": "recovered"},
-                {"x": 13.407, "y": 52.52, "status": "healthy"}
+                {"id": 1, "x": 13.406, "y": 52.521, "status": "infected"},
+                {"id": 2, "x": 13.409, "y": 52.519, "status": "recovered"},
+                {"id": 3, "x": 13.407, "y": 52.52, "status": "healthy"}
             ]
         }
     ]
