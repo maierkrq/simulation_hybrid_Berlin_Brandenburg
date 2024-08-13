@@ -37,7 +37,6 @@
         var iteration = 0;
         var maxIterations;
         var agentsData;
-        var densityIteration = 0;
         var maxDensityIterations; 
         var densityData;
                 
@@ -221,7 +220,8 @@
         
         // Animation der Agenten
         function animate(gridData,triangleData) {
-            updateDensity(iteration, gridData, triangleData);
+            //updateDensity(iteration, gridData, triangleData);
+            setTimeout(() => updateDensity(iteration, gridData, triangleData), 100);
             updateAgents(iteration);
             updateIterationDisplay(iteration);  // Iteration in der Legende anzeigen
             iteration++;
