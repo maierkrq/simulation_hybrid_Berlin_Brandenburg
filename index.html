@@ -40,10 +40,9 @@
         var maxDensityIterations; 
         var densityData;
 
+        var map = L.map('map').setView([52.5, 13.5], 8);
         var svgPane = map.createPane('svgPane');
         svgPane.style.zIndex = 650; // Sicherstellen, dass es über anderen Ebenen liegt, aber unter den Markern
-  
-        var map = L.map('map').setView([52.5, 13.5], 8);
         
         // Schwarz-Weiß-Kachel hinzufügen
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
