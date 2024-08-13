@@ -109,7 +109,7 @@
 
 
         // Dichte-Heatmap für die aktuelle Iteration aktualisieren
-        function updateDensity(iteration, gridData) {
+        function updateDensity(iteration, gridData, triangleData) {
             var svg = d3.select(map.getPanes().overlayPane).select("svg");
             if (svg) {
                 svg.remove();
@@ -178,14 +178,14 @@
         }
 
         // Animation der Dichte-Daten
-        function animateDensity(gridData) {
-            updateDensity(densityIteration, gridData);
+        function animateDensity(gridData,triangleData) {
+            updateDensity(densityIteration, gridData, triangleData);
             densityIteration++;
             if (densityIteration < maxDensityIterations) {
-                setTimeout(() => animateDensity(gridData), 1000);  // Nächste Iteration nach 1 Sekunde anzeigen
+                setTimeout(() => animateDensity(gridData,triangleData), 1000);  // Nächste Iteration nach 1 Sekunde anzeigen
             } else {
                 densityIteration = 0;  // Zurück zur ersten Iteration
-                setTimeout(() => animateDensity(gridData), 1000);  // Schleife von vorne starten
+                setTimeout(() => animateDensity(gridData,triangleData), 1000);  // Schleife von vorne starten
             }
         }
         
@@ -249,8 +249,8 @@
             Promise.all([loadBerlinBounds(), loadGridData(), loadTriangleData(), loadAgentData(), loadDensityData()])
                 .then(([berlinBounds, gridData, triangleData, agentsData, densityData]) => {
                     // Starte die Animation
-                    //animate();
-                    animateDensity(gridData); 
+                    animate();
+                    animateDensity(gridData,triangleData); 
                 })
                 .catch(error => console.error('Fehler beim Initialisieren der Karte:', error));
         }
