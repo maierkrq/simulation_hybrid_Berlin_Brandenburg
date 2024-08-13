@@ -199,7 +199,7 @@
                             console.log("color:", d3.interpolateReds(densityValue));
                             return d3.interpolateReds(densityValue);
                         })
-                        .attr("stroke", "#000");
+                        .attr("stroke", "#000")
                         .attr("stroke-width", function() {
                             // Passen Sie die Breite der Linien an die Zoom-Stufe an
                             return Math.max(1 / zoom, 0.5); // Mindestbreite von 0.5 Pixel für Sichtbarkeit
