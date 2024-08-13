@@ -174,7 +174,7 @@
 
             // Konvertiere SVG in ein Base64-Bild
             //var svgElement = d3.select("svg").node();
-            var svgElement = d3.select('.leaflet-svg-pane').select("svg").node();
+            var svgElement = d3.select('.leaflet-svg-pane').node();
             var svgData = new XMLSerializer().serializeToString(svgElement);
             var svgUrl = 'data:image/svg+xml;base64,' + btoa(svgData);
         
