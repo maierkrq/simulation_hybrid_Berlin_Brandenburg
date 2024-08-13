@@ -78,9 +78,23 @@
                 .catch(error => console.error('Fehler beim Laden der Grid-Daten:', error));
         }
 
+        // Indizes der Dreiecke laden
+        function loadTriangleData() {
+            return fetch('data/triangleIndexData.json')
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Indizes der Dreiecke geladen:", data);
+                    if (!Array.isArray(data)) {
+                        throw new Error('Ungültige Indizes der Dreiecke.');
+                    }
+                    return data;
+                })
+                .catch(error => console.error('Fehler beim Laden der Indizes der Dreiecke:', error));
+        }
+
 
         // Dichte-Daten laden und interpolierte Heatmap erstellen
-        function loadDensityData(gridData) {
+        function loadDensityData(gridData, triangleData) {
             return fetch('data/density.json')
                 .then(response => response.json())
                 .then(data => {
@@ -105,8 +119,10 @@
 
                     console.log("Interpolationspunkte:", points);
                     
-                    var delaunay = d3.Delaunay.from(points, d => d[0], d => d[1]);
-                    var triangles = delaunay.triangles;
+                    //var delaunay = d3.Delaunay.from(points, d => d[0], d => d[1]);
+                    //var triangles = delaunay.triangles;
+                    console.log("triangleData:", triangleData);
+                    var triangles = triangleData;
                     console.log("triangles:", triangles);
 
                     
@@ -185,7 +201,6 @@
                     
                             // Calculate the average density
                             var densityValue = (p0[2] + p1[2] + p2[2]) / 3;
-                            console.log("color:", d3.interpolateReds(densityValue));
                             return d3.interpolateReds(densityValue);
                         })
                         .attr("stroke", "#000")
@@ -259,16 +274,16 @@
 
         // Alle Daten laden und Karte initialisieren
         function initializeMap() {
-            Promise.all([loadBerlinBounds(), loadGridData(), loadAgentData()])
-                .then(([berlinBounds, gridData, agentsData]) => {
-                    return loadDensityData(gridData).then(svgElement => {
+            Promise.all([loadBerlinBounds(), loadGridData(), loadTriangleData(), loadAgentData()])
+                .then(([berlinBounds, gridData, triangleData, agentsData]) => {
+                    return loadDensityData(gridData, triangleData).then(svgElement => {
                         if (svgElement) {
                             var svgData = new XMLSerializer().serializeToString(svgElement);
                             var svgUrl = 'data:image/svg+xml;base64,' + btoa(svgData);
 
                             console.log("SVG Element:", svgElement);  // Debugging
-                            console.log("SVG Data:", svgData);        // Debugging
-                            console.log("SVG URL:", svgUrl);          // Debugging
+                            //console.log("SVG Data:", svgData);        // Debugging
+                            //console.log("SVG URL:", svgUrl);          // Debugging
 
                             // Verwenden Sie imageOverlay, um das SVG als Layer hinzuzufügen
                             console.log("bounds:", map.getBounds());
