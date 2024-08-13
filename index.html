@@ -39,7 +39,10 @@
         var agentsData;
         var maxDensityIterations; 
         var densityData;
-                
+
+        var svgPane = map.createPane('svgPane');
+        svgPane.style.zIndex = 650; // Sicherstellen, dass es über anderen Ebenen liegt, aber unter den Markern
+  
         var map = L.map('map').setView([52.5, 13.5], 8);
         
         // Schwarz-Weiß-Kachel hinzufügen
@@ -109,11 +112,11 @@
 
         // Dichte-Heatmap für die aktuelle Iteration aktualisieren
         function updateDensity(iteration, gridData, triangleData) {
-            var svg = d3.select(map.getPanes().overlayPane).select("svg");
+            var svg = d3.select(map.getPanes().svgPane).select("svg");
+            var g = svg.append("g").attr("class", "leaflet-zoom-hide");
             if (svg) {
                 svg.remove();
             }
-            var g = d3.select(map.getPanes().overlayPane).append("svg").append("g").attr("class", "leaflet-zoom-hide");
         
             var currentIteration = densityData[iteration].densities;
         
