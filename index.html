@@ -176,18 +176,6 @@
             var bounds = map.getBounds();
             L.imageOverlay(svgUrl, bounds).addTo(map);
         }
-
-        // Animation der Dichte-Daten
-        function animateDensity(gridData,triangleData) {
-            updateDensity(densityIteration, gridData, triangleData);
-            densityIteration++;
-            if (densityIteration < maxDensityIterations) {
-                setTimeout(() => animateDensity(gridData,triangleData), 1000);  // Nächste Iteration nach 1 Sekunde anzeigen
-            } else {
-                densityIteration = 0;  // Zurück zur ersten Iteration
-                setTimeout(() => animateDensity(gridData,triangleData), 1000);  // Schleife von vorne starten
-            }
-        }
         
         // Agenten-Daten laden
         function loadAgentData() {
@@ -232,15 +220,18 @@
         }
         
         // Animation der Agenten
-        function animate() {
+        function animate(gridData,triangleData) {
+            updateDensity(iteration, gridData, triangleData);
             updateAgents(iteration);
             updateIterationDisplay(iteration);  // Iteration in der Legende anzeigen
             iteration++;
             if (iteration < maxIterations) {
-                setTimeout(animate, 1000);  // Nächste Iteration nach 1 Sekunde anzeigen
+                setTimeout(() => animate(gridData,triangleData), 1000);
+                //setTimeout(animate, 1000);  // Nächste Iteration nach 1 Sekunde anzeigen
             } else {
                 iteration = 0;  // Zurück zur ersten Iteration
-                setTimeout(animate, 1000);  // Schleife von vorne starten
+                setTimeout(() => animate(gridData,triangleData), 1000);
+                //setTimeout(animate, 1000);  // Schleife von vorne starten
             }
         }
 
@@ -249,8 +240,7 @@
             Promise.all([loadBerlinBounds(), loadGridData(), loadTriangleData(), loadAgentData(), loadDensityData()])
                 .then(([berlinBounds, gridData, triangleData, agentsData, densityData]) => {
                     // Starte die Animation
-                    animateDensity(gridData,triangleData); 
-                    animate();
+                    animate(gridData,triangleData);
                 })
                 .catch(error => console.error('Fehler beim Initialisieren der Karte:', error));
         }
