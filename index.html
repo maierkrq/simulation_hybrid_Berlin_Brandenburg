@@ -120,6 +120,9 @@
                     var triangles = delaunay.triangles;
                     console.log("triangles:", triangles);
 
+                    // Entferne vorherige SVG-Elemente, wenn vorhanden
+                    d3.select(map.getPanes().overlayPane).selectAll("svg").remove();
+                    
                     var svg = d3.select(map.getPanes().overlayPane).append("svg")
                                 .style("border", "1px solid red");  // Sichtbare Umrandung hinzufügen
                     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
