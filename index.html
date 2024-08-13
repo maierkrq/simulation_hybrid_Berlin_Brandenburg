@@ -139,6 +139,14 @@
     
                         g.attr("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
 
+                        // Update the stroke width based on the zoom level
+                        var zoom = map.getZoom();
+                        g.selectAll("path")
+                            .attr("stroke-width", function() {
+                                // Reduce the stroke width based on zoom level
+                                return Math.max(1 / zoom, 0.5); // Minimum width of 0.5 for visibility
+                            });
+
                         //console.log("width", bottomRight.x - topLeft.x);
                         //console.log("height", bottomRight.y - topLeft.y);
                         //console.log("left", topLeft.x + "px");
