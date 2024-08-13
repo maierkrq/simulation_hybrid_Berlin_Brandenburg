@@ -249,8 +249,8 @@
             Promise.all([loadBerlinBounds(), loadGridData(), loadTriangleData(), loadAgentData(), loadDensityData()])
                 .then(([berlinBounds, gridData, triangleData, agentsData, densityData]) => {
                     // Starte die Animation
-                    animate();
                     animateDensity(gridData,triangleData); 
+                    animate();
                 })
                 .catch(error => console.error('Fehler beim Initialisieren der Karte:', error));
         }
