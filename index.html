@@ -121,8 +121,8 @@
                     console.log("triangles:", triangles);
 
                     
-                    var svg = d3.select(map.getPanes().overlayPane).append("svg")
-                                .style("border", "1px solid red");  // Sichtbare Umrandung hinzufügen
+                    var svg = d3.select(map.getPanes().overlayPane).append("svg");
+                                //.style("border", "1px solid red");  // Sichtbare Umrandung hinzufügen
                     if (svg) {
                         svg.remove();
                     }
@@ -147,12 +147,6 @@
                                 // Reduce the stroke width based on zoom level
                                 return Math.max(1 / zoom, 0.5); // Minimum width of 0.5 for visibility
                             });
-
-                        //console.log("width", bottomRight.x - topLeft.x);
-                        //console.log("height", bottomRight.y - topLeft.y);
-                        //console.log("left", topLeft.x + "px");
-                        //console.log("top", topLeft.y + "px");
-                        //console.log("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
                     }
 
                     function updateSVG() {
@@ -206,6 +200,11 @@
                             return d3.interpolateReds(densityValue);
                         })
                         .attr("stroke", "#000");
+                        .attr("stroke-width", function() {
+                            // Passen Sie die Breite der Linien an die Zoom-Stufe an
+                            return Math.max(1 / zoom, 0.5); // Mindestbreite von 0.5 Pixel für Sichtbarkeit
+                        });
+                        //.attr("stroke-width", 0.5);
 
                     //console.log(svg.node().outerHTML);
                     return svg.node();
