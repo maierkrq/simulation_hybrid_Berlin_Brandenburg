@@ -220,20 +220,20 @@
         
         // Animation der Agenten
         function animate(gridData,triangleData) {
-            updateDensity(iteration, gridData, triangleData);
-            requestAnimationFrame(() => {
+            //updateDensity(iteration, gridData, triangleData);
+            
+            //requestAnimationFrame(() => {
                 updateAgents(iteration);
                 updateIterationDisplay(iteration);  // Iteration in der Legende anzeigen
+                
                 iteration++;
                 if (iteration < maxIterations) {
                     setTimeout(() => animate(gridData,triangleData), 1000);
-                    //setTimeout(animate, 1000);  // Nächste Iteration nach 1 Sekunde anzeigen
                 } else {
                     iteration = 0;  // Zurück zur ersten Iteration
                     setTimeout(() => animate(gridData,triangleData), 1000);
-                    //setTimeout(animate, 1000);  // Schleife von vorne starten
                 }
-            });
+            //});
         }
 
         // Alle Daten laden und Karte initialisieren
