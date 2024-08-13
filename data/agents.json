@@ -7,7 +7,7 @@
                 { "id": 2, "x": 14.2858, "y": 52.3526, "status": "infected" },
                 { "id": 3, "x": 13.1, "y": 52.6, "status": "healthy" },
                 { "id": 4, "x": 13.4, "y": 52.7, "status": "infected" },
-                { "id": 4, "x": 14.5310, "y": 52.1326, "status": "hospitalized" }
+                { "id": 5, "x": 14.5310, "y": 52.1326, "status": "hospitalized" }
             ]
         },
         {
