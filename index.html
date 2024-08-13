@@ -120,11 +120,9 @@
                     var triangles = delaunay.triangles;
                     console.log("triangles:", triangles);
 
-                    // Entferne vorherige SVG-Elemente, wenn vorhanden
-                    d3.select(map.getPanes().overlayPane).selectAll("svg").remove();
                     
-                    var svg = d3.select(map.getPanes().overlayPane).append("svg")
-                                .style("border", "1px solid red");  // Sichtbare Umrandung hinzufügen
+                    var svg = d3.select(map.getPanes().overlayPane); //.append("svg")
+                                //.style("border", "1px solid red");  // Sichtbare Umrandung hinzufügen
                     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
                     function initialSVG() {
@@ -282,7 +280,7 @@
 
                             // Verwenden Sie imageOverlay, um das SVG als Layer hinzuzufügen
                             console.log("bounds:", map.getBounds());
-                            //L.imageOverlay(svgUrl, map.getBounds()).addTo(map);
+                            L.imageOverlay(svgUrl, map.getBounds()).addTo(map);
                             console.log("HeatLayer hinzugefügt");
                     
                             // Starte die Animation
