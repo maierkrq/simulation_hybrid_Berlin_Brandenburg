@@ -177,9 +177,9 @@
                         .join("path")
                         .attr("d", function(d) {
                             var i = d; // Index für das aktuelle Dreieck
-                            var p0 = points[triangles[i][0]],
-                                p1 = points[triangles[i][1]],
-                                p2 = points[triangles[i][2]];
+                            var p0 = points[triangles[i][0]-1],
+                                p1 = points[triangles[i][1]-1],
+                                p2 = points[triangles[i][2]-1];
                     
                             if (!p0 || !p1 || !p2) {
                                 console.error("Ungültige Daten für das Dreieck:", d, ", Punkte:", p0, p1, p2, ", triangles[i][0-2]:", triangles[i][0], triangles[i][1], triangles[i][2]);
@@ -191,9 +191,9 @@
                         })
                         .attr("fill", function(d) {
                             var i = d; // Index für das aktuelle Dreieck
-                            var p0 = points[triangles[i][0]],
-                                p1 = points[triangles[i][1]],
-                                p2 = points[triangles[i][2]];
+                            var p0 = points[triangles[i][0]-1],
+                                p1 = points[triangles[i][1]-1],
+                                p2 = points[triangles[i][2]-1];
                     
                             if (!p0 || !p1 || !p2) {
                                 console.error("Ungültige Daten für das Dreieck:", d);
