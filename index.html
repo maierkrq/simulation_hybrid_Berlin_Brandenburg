@@ -123,23 +123,31 @@
                     var svg = d3.select(map.getPanes().overlayPane).append("svg")
                                 .style("border", "1px solid red");  // Sichtbare Umrandung hinzufügen
                     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
-                        
-                    var bounds = map.getBounds();
-                    var topLeft = map.latLngToLayerPoint(bounds.getNorthWest());
-                    var bottomRight = map.latLngToLayerPoint(bounds.getSouthEast());
 
-                    svg.attr("width", bottomRight.x - topLeft.x)
-                       .attr("height", bottomRight.y - topLeft.y)
-                       .style("left", topLeft.x + "px")
-                       .style("top", topLeft.y + "px");
+                    function updateSVG() {
+                        var bounds = map.getBounds();
+                        var topLeft = map.latLngToLayerPoint(bounds.getNorthWest());
+                        var bottomRight = map.latLngToLayerPoint(bounds.getSouthEast());
+    
+                        svg.attr("width", bottomRight.x - topLeft.x)
+                           .attr("height", bottomRight.y - topLeft.y)
+                           .style("left", topLeft.x + "px")
+                           .style("top", topLeft.y + "px");
+    
+                        g.attr("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
 
-                    g.attr("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
+                        //console.log("width", bottomRight.x - topLeft.x);
+                        //console.log("height", bottomRight.y - topLeft.y);
+                        //console.log("left", topLeft.x + "px");
+                        //console.log("top", topLeft.y + "px");
+                        //console.log("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
+                    }
 
-                    console.log("width", bottomRight.x - topLeft.x);
-                    console.log("height", bottomRight.y - topLeft.y);
-                    console.log("left", topLeft.x + "px");
-                    console.log("top", topLeft.y + "px");
-                    console.log("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
+                    // Initiale Positionierung
+                    updateSVG();
+                    // Aktualisiere SVG bei Kartenereignissen
+                    map.on('zoomend', updateSVG);
+                    map.on('moveend', updateSVG);
 
 
                     g.selectAll("path")
@@ -253,7 +261,7 @@
 
                             // Verwenden Sie imageOverlay, um das SVG als Layer hinzuzufügen
                             console.log("bounds:", map.getBounds());
-                            L.imageOverlay(svgUrl, [[51.15, 12.60], [53.55, 15.03]]).addTo(map);
+                            L.imageOverlay(svgUrl, map.getBounds()).addTo(map);
                             console.log("HeatLayer hinzugefügt");
                     
                             // Starte die Animation
