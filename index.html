@@ -104,7 +104,10 @@
                             console.error(`Koordinaten für ID ${d.id} nicht gefunden.`);
                             return null;
                         }
-                        return [coords.longitude, coords.latitude, d.density];
+                        
+                        // Projektion der geografischen Koordinaten in Pixelkoordinaten
+                        var projected = map.latLngToLayerPoint(new L.LatLng(coords.latitude, coords.longitude));
+                        return [projected.x, projected.y, d.density];
                     }).filter(point => point !== null);
         
                     if (points.length === 0) {
@@ -120,13 +123,6 @@
                     var svg = d3.select(map.getPanes().overlayPane).append("svg")
                                 .style("border", "1px solid red");  // Sichtbare Umrandung hinzufügen
                     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
-
-                    function projectPoint(x, y) {
-                        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-                        this.stream.point(point.x, point.y);
-                    }
-
-                    console.log("before update");
                         
                     var bounds = map.getBounds();
                     var topLeft = map.latLngToLayerPoint(bounds.getNorthWest());
@@ -145,8 +141,6 @@
                     console.log("top", topLeft.y + "px");
                     console.log("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
 
-                    var path = d3.geoPath()
-                                 .projection(d3.geoTransform({point: projectPoint}));
 
                     g.selectAll("path")
                         .data(d3.range(triangles.length / 3)) // Anzahl der Dreiecke
@@ -183,7 +177,7 @@
                         })
                         .attr("stroke", "#000");
 
-                    console.log(svg.node().outerHTML);
+                    //console.log(svg.node().outerHTML);
                     return svg.node();
                 })
                 .catch(error => console.error('Fehler beim Laden der Dichtedaten:', error));
