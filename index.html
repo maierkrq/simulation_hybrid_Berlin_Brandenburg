@@ -17,17 +17,6 @@
     </style>
 </head>
 <body>
-    <svg width="200" height="200">
-      <g>
-        <!-- Elemente im Hintergrund -->
-        <rect x="10" y="10" width="100" height="100" fill="blue" />
-      </g>
-      <g>
-        <!-- Elemente im Vordergrund -->
-        <circle cx="60" cy="60" r="50" fill="red" />
-      </g>
-    </svg>
-
     <div id="map"></div>
     <div class="legend">
         <h4>Legend</h4>
@@ -39,7 +28,7 @@
         <p>Iteration: <span id="iteration-counter">0</span></p> <!-- Iteration-Anzeige -->
     </div>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    //<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://unpkg.com/d3-delaunay@6/d3-delaunay.min.js"></script>
     <script>
