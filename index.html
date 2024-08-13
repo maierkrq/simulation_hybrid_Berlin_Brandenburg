@@ -116,10 +116,10 @@
         function updateDensity(iteration, gridData, triangleData) {
             //var svg = d3.select(map.getPanes().svgPane).select("svg");
             var svg = d3.select('.leaflet-svg-pane').select("svg");
-            var g = svg.append("g").attr("class", "leaflet-zoom-hide");
             if (svg) {
                 svg.remove();
             }
+            var g = d3.select('.leaflet-svg-pane').select("svg").append("g").attr("class", "leaflet-zoom-hide");
         
             var currentIteration = densityData[iteration].densities;
         
@@ -173,7 +173,8 @@
                 .attr("stroke-width", 0.1);
 
             // Konvertiere SVG in ein Base64-Bild
-            var svgElement = d3.select("svg").node();
+            //var svgElement = d3.select("svg").node();
+            var svgElement = d3.select('.leaflet-svg-pane').select("svg").node();
             var svgData = new XMLSerializer().serializeToString(svgElement);
             var svgUrl = 'data:image/svg+xml;base64,' + btoa(svgData);
         
