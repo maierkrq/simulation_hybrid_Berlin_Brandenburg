@@ -173,7 +173,7 @@
         
             // Verwenden Sie imageOverlay, um das SVG als Layer hinzuzufügen
             var bounds = map.getBounds();
-            L.imageOverlay(svgUrl, bounds).addTo(map);
+            //L.imageOverlay(svgUrl, bounds).addTo(map);
         }
         
         // Agenten-Daten laden
@@ -220,9 +220,9 @@
         
         // Animation der Agenten
         function animate(gridData,triangleData) {
-            //updateDensity(iteration, gridData, triangleData);
+            updateDensity(iteration, gridData, triangleData);
             
-            //requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
                 updateAgents(iteration);
                 updateIterationDisplay(iteration);  // Iteration in der Legende anzeigen
                 
@@ -233,7 +233,7 @@
                     iteration = 0;  // Zurück zur ersten Iteration
                     setTimeout(() => animate(gridData,triangleData), 1000);
                 }
-            //});
+            });
         }
 
         // Alle Daten laden und Karte initialisieren
