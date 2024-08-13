@@ -127,7 +127,7 @@
                                 .style("border", "1px solid red");  // Sichtbare Umrandung hinzufügen
                     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
-                    function updateSVG() {
+                    function initialSVG() {
                         var bounds = map.getBounds();
                         var topLeft = map.latLngToLayerPoint(bounds.getNorthWest());
                         var bottomRight = map.latLngToLayerPoint(bounds.getSouthEast());
@@ -154,12 +154,22 @@
                         //console.log("transform", "translate(" + -topLeft.x + "," + -topLeft.y + ")");
                     }
 
+                    function updateSVG() {
+                        // Update the stroke width based on the zoom level
+                        var zoom = map.getZoom();
+                        g.selectAll("path")
+                            .attr("stroke-width", function() {
+                                // Reduce the stroke width based on zoom level
+                                return Math.max(1 / zoom, 0.5); // Minimum width of 0.5 for visibility
+                            });
+                    }
                     // Initiale Positionierung
-                    updateSVG();
+                    initialSVG();
                     // Aktualisiere SVG bei Kartenereignissen
+                    //map.on('zoomend', initialSVG);
+                    //map.on('moveend', initialSVG);
                     map.on('zoomend', updateSVG);
                     map.on('moveend', updateSVG);
-
 
                     g.selectAll("path")
                         .data(d3.range(triangles.length / 3)) // Anzahl der Dreiecke
