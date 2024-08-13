@@ -116,9 +116,9 @@
         function updateDensity(iteration, gridData, triangleData) {
             //var svg = d3.select(map.getPanes().svgPane).select("svg");
             var svg = d3.select('.leaflet-svg-pane').select("svg");
-            if (svg) {
-                svg.remove();
-            }
+            //if (svg) {
+            //    svg.remove();
+            //}
             var g = d3.select('.leaflet-svg-pane').select("svg").append("g").attr("class", "leaflet-zoom-hide");
         
             var currentIteration = densityData[iteration].densities;
@@ -176,7 +176,7 @@
             //var svgElement = d3.select("svg").node();
             //var svgElement = d3.select('.leaflet-svg-pane').select("svg").node();
             //var svgElement = d3.select('.leaflet-svg-pane svg').node();
-            var svgElement = d3.select('.leaflet-svg-pane').node();
+            var svgElement = svg.node(); //d3.select('.leaflet-svg-pane').node();
             console.log("svgElement:", svgElement);
             var svgData = new XMLSerializer().serializeToString(svgElement);
             console.log("svgData:", svgData);
