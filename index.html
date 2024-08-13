@@ -121,8 +121,11 @@
                     console.log("triangles:", triangles);
 
                     
-                    var svg = d3.select(map.getPanes().overlayPane); //.append("svg")
-                                //.style("border", "1px solid red");  // Sichtbare Umrandung hinzufügen
+                    var svg = d3.select(map.getPanes().overlayPane).append("svg")
+                                .style("border", "1px solid red");  // Sichtbare Umrandung hinzufügen
+                    if (svg) {
+                        svg.remove();
+                    }
                     var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
                     function initialSVG() {
