@@ -202,6 +202,7 @@
                         .attr("stroke", "#000")
                         .attr("stroke-width", function() {
                             // Passen Sie die Breite der Linien an die Zoom-Stufe an
+                            var zoom = map.getZoom();
                             return Math.max(1 / zoom, 0.5); // Mindestbreite von 0.5 Pixel für Sichtbarkeit
                         });
                         //.attr("stroke-width", 0.5);
