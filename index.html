@@ -41,11 +41,11 @@
         var densityData;
 
         var map = L.map('map').setView([52.5, 13.5], 8);
-        //var svgPane = map.createPane('svgPane');
+        var svgPane = map.createPane('svgPane');
+        svgPane.style.zIndex = 400;
+        //var svgPane = L.DomUtil.create('div', 'leaflet-pane leaflet-svg-pane');
         //svgPane.style.zIndex = 650; // Sicherstellen, dass es über anderen Ebenen liegt, aber unter den Markern
-        var svgPane = L.DomUtil.create('div', 'leaflet-pane leaflet-svg-pane');
-        svgPane.style.zIndex = 650; // Sicherstellen, dass es über anderen Ebenen liegt, aber unter den Markern
-        map.getPanes().overlayPane.appendChild(svgPane);
+        //map.getPanes().overlayPane.appendChild(svgPane);
         
         // Schwarz-Weiß-Kachel hinzufügen
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -115,11 +115,14 @@
         // Dichte-Heatmap für die aktuelle Iteration aktualisieren
         function updateDensity(iteration, gridData, triangleData) {
             //var svg = d3.select(map.getPanes().svgPane).select("svg");
-            var svg = d3.select('.leaflet-svg-pane').select("svg");
+            //var svg = d3.select('.leaflet-svg-pane').select("svg");
+            var svg = L.svg({pane: 'svgPane'}).addTo(map);
+            var svgElement = d3.select(svg._rootGroup).append("svg");
             //if (svg) {
             //    svg.remove();
             //}
-            var g = d3.select('.leaflet-svg-pane').select("svg").append("g").attr("class", "leaflet-zoom-hide");
+            //var g = d3.select('.leaflet-svg-pane').select("svg").append("g").attr("class", "leaflet-zoom-hide");
+            var g = d3.select(svg._rootGroup).append("g").attr("class", "my-group-class");
         
             var currentIteration = densityData[iteration].densities;
         
