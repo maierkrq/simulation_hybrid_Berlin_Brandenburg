@@ -114,15 +114,24 @@
 
         // Dichte-Heatmap für die aktuelle Iteration aktualisieren
         function updateDensity(iteration, gridData, triangleData) {
-            //var svg = d3.select(map.getPanes().svgPane).select("svg");
-            //var svg = d3.select('.leaflet-svg-pane').select("svg");
-            var svg = L.svg({pane: 'svgPane'}).addTo(map);
-            var svgElement = d3.select(svg._rootGroup).append("svg");
-            //if (svg) {
-            //    svg.remove();
-            //}
-            //var g = d3.select('.leaflet-svg-pane').select("svg").append("g").attr("class", "leaflet-zoom-hide");
-            var g = d3.select(svg._rootGroup).append("g").attr("class", "my-group-class");
+            // Überprüfe, ob das SVG-Element bereits existiert
+            var svg = d3.select(map.getPanes().svgPane).select("svg");
+            if (svg.empty()) {
+                // Erstelle das SVG-Element, falls es noch nicht existiert
+                svg = L.svg({pane: 'svgPane'}).addTo(map);
+                svg = d3.select(svg._rootGroup).append("svg");
+            }
+            //var svg = L.svg({pane: 'svgPane'}).addTo(map);
+            //var svgElement = d3.select(svg._rootGroup).append("svg");
+            
+            //var g = d3.select(svg._rootGroup).append("g").attr("class", "my-group-class");
+            
+            // Überprüfe, ob das g-Element bereits existiert
+            var g = svg.select("g.my-group-class");
+            if (g.empty()) {
+                // Erstelle das g-Element, falls es noch nicht existiert
+                g = svg.append("g").attr("class", "my-group-class");
+            }
         
             var currentIteration = densityData[iteration].densities;
         
@@ -174,22 +183,6 @@
                 })
                 .attr("stroke", "#000")
                 .attr("stroke-width", 0.1);
-
-            // Konvertiere SVG in ein Base64-Bild
-            //var svgElement = d3.select("svg").node();
-            //var svgElement = d3.select('.leaflet-svg-pane').select("svg").node();
-            //var svgElement = d3.select('.leaflet-svg-pane svg').node();
-            
-            //var svgElement = svg.node(); //d3.select('.leaflet-svg-pane').node();
-            //console.log("svgElement:", svgElement);
-            //var svgData = new XMLSerializer().serializeToString(svgElement);
-            //console.log("svgData:", svgData);
-            //var svgUrl = 'data:image/svg+xml;base64,' + btoa(svgData);
-            //console.log("svgUrl:", svgUrl);
-        
-            // Verwenden Sie imageOverlay, um das SVG als Layer hinzuzufügen
-            //var bounds = map.getBounds();
-            //L.imageOverlay(svgUrl, bounds).addTo(map);
         }
         
         // Agenten-Daten laden
