@@ -179,16 +179,17 @@
             //var svgElement = d3.select("svg").node();
             //var svgElement = d3.select('.leaflet-svg-pane').select("svg").node();
             //var svgElement = d3.select('.leaflet-svg-pane svg').node();
-            var svgElement = svg.node(); //d3.select('.leaflet-svg-pane').node();
-            console.log("svgElement:", svgElement);
-            var svgData = new XMLSerializer().serializeToString(svgElement);
-            console.log("svgData:", svgData);
-            var svgUrl = 'data:image/svg+xml;base64,' + btoa(svgData);
-            console.log("svgUrl:", svgUrl);
+            
+            //var svgElement = svg.node(); //d3.select('.leaflet-svg-pane').node();
+            //console.log("svgElement:", svgElement);
+            //var svgData = new XMLSerializer().serializeToString(svgElement);
+            //console.log("svgData:", svgData);
+            //var svgUrl = 'data:image/svg+xml;base64,' + btoa(svgData);
+            //console.log("svgUrl:", svgUrl);
         
             // Verwenden Sie imageOverlay, um das SVG als Layer hinzuzufügen
-            var bounds = map.getBounds();
-            L.imageOverlay(svgUrl, bounds).addTo(map);
+            //var bounds = map.getBounds();
+            //L.imageOverlay(svgUrl, bounds).addTo(map);
         }
         
         // Agenten-Daten laden
